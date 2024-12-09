@@ -1,0 +1,19 @@
+// Définition de la broche du buzzer
+const int buzzerPin = 4; // La broche IO4 utilisée pour le buzzer
+
+void setup() {
+  // Configurer la broche du buzzer comme sortie
+  pinMode(buzzerPin, OUTPUT);
+}
+
+void loop() {
+  // Activer le buzzer (émettre un son)
+  digitalWrite(buzzerPin, HIGH);
+  delay(1000); // Attendre 1 seconde
+  
+  // Désactiver le buzzer (arrêter le son)
+  digitalWrite(buzzerPin, LOW);
+  delay(1000); // Attendre 1 seconde
+}
+
+
