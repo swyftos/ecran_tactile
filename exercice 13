@@ -1,5 +1,5 @@
-// Définition de la broche du buzzer
-const int buzzerPin = 4; // La broche IO4 utilisée pour le buzzer
+const int buzzerPin = 8; // Correspond à D4 sur la base shield
+int tempo=50;
 
 void setup() {
   // Configurer la broche du buzzer comme sortie
@@ -9,11 +9,11 @@ void setup() {
 void loop() {
   // Activer le buzzer (émettre un son)
   digitalWrite(buzzerPin, HIGH);
-  delay(1000); // Attendre 1 seconde
-  
+  delayMicroseconds(tempo); // Attendre 1 seconde
+
   // Désactiver le buzzer (arrêter le son)
   digitalWrite(buzzerPin, LOW);
-  delay(1000); // Attendre 1 seconde
+  delayMicroseconds(tempo); // Attendre 1 seconde
+  //tempo=tempo+20;
 }
-
 
