@@ -1,0 +1,41 @@
+### Analyse et réponses :
+
+#### 1. **Régime de fonctionnement du transistor Q1 :**
+Le transistor **Q1 (MPS5179)** agit comme un interrupteur électronique. Il fonctionne soit en mode **saturation**, soit en mode **blocage**, selon la tension appliquée à sa base via la résistance **R6**. 
+
+- Lorsque la broche IO4 du microcontrôleur (Arduino) est à un niveau haut, un courant de base circule, mettant le transistor en saturation. Cela permet à un courant important de traverser son collecteur-émetteur pour activer la bobine du relais.
+- Lorsque IO4 est à un niveau bas, aucun courant de base ne circule, et le transistor est en mode blocage, ce qui désactive le relais.
+
+Ainsi, **Q1 fonctionne principalement en régime de commutation (saturation/blocage).**
+
+---
+
+#### 2. **Fonctionnement du relais :**
+- Le relais est un composant électromécanique qui utilise une bobine (alimentée ici par le transistor Q1) pour activer un interrupteur.
+- Lorsque IO4 est à un niveau haut, le transistor sature, un courant traverse la bobine du relais (**RL1**) et génère un champ magnétique.
+- Ce champ magnétique actionne le contact du relais, fermant le circuit de la LED rouge **D5** (alimentée par **Vp2**).
+- En l'absence de courant dans la bobine (IO4 bas), le ressort interne du relais ramène le contact à son état repos (circuit ouvert).
+
+---
+
+#### 3. **Expression du courant \( I_{D5} \) :**
+Le courant dans la LED rouge **D5** peut être exprimé en fonction de la tension d'alimentation \( V_{p2} \), de la tension directe de la LED \( V_{D5} \), et de la résistance \( R7 \) :
+
+\[
+I_{D5} = \frac{V_{p2} - V_{D5}}{R7}
+\]
+
+---
+
+#### 4. **Calcul de \( I_{D5} \) et vérification :**
+- Données : \( V_{D5} = 2\ \text{V},\ V_{p2} = 5\ \text{V},\ R7 = 100\ \Omega \)
+- Calculons \( I_{D5} \) :
+
+\[
+I_{D5} = \frac{V_{p2} - V_{D5}}{R7} = \frac{5 - 2}{100} = \frac{3}{100} = 0,03\ \text{A} = 30\ \text{mA}
+\]
+
+- **Vérification avec l’ampèremètre :**
+L’ampèremètre affichera une valeur proche de \( 30\ \text{mA} \), confirmant le calcul.
+
+ !
