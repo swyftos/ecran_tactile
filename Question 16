@@ -1,0 +1,87 @@
+#include <Adafruit_GFX.h>
+#include <SPI.h>
+#include <Wire.h>
+#include <Adafruit_ILI9341.h>
+#include <Adafruit_STMPE610.h>
+
+// This is calibration data for the raw touch data to the screen coordinates
+#define TS_MINX 150
+#define TS_MINY 130
+#define TS_MAXX 3800
+#define TS_MAXY 4000
+
+//tactile
+#define STMPE_CS 8
+Adafruit_STMPE610 ts = Adafruit_STMPE610(STMPE_CS);
+//TFT
+#define TFT_CS 10
+#define TFT_DC 9
+Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC);
+
+//variables du projet
+boolean appui = true;
+const int buzzerPin = 8; // Correspond à D4 sur la base shield
+const int correctCode = 1234; // Code du digicode
+
+int enteredCode = 0; // Code saisi
+int currentMultiplier = 1000; // Multiplicateur initial (4 chiffres)
+
+void setup() {
+  // Configurer la broche du buzzer comme sortie
+  pinMode(buzzerPin, OUTPUT);
+
+  // Gestion de la liaison série avec l'écran
+  Serial.begin(9600);
+  tft.begin();
+  if (!ts.begin()) {
+    Serial.println("Unable to start touchscreen.");
+  } else {
+    Serial.println("Touchscreen started.");
+  }
+  tft.fillScreen(ILI9341_BLACK);
+}
+
+void playNote(int frequency, int duration) {
+  tone(buzzerPin, frequency);
+  delay(duration);
+  noTone(buzzerPin);
+}
+
+void loop() {
+  // Détection du tactile
+  if (!ts.bufferEmpty()) {
+    TS_Point p = ts.getPoint();
+    int x = p.x / 10;
+    int y = p.y / 10;
+
+    // Test de chaque bouton (simplifié)
+    if (appui) {
+      playNote(220, 200); // LA3 pour chaque appui
+
+      // Saisir un chiffre et l'ajouter au code entré
+      int digit = detectDigit(x, y); // Implémentation spécifique à votre interface
+      if (digit >= 0 && digit <= 9) {
+        enteredCode += digit * currentMultiplier;
+        currentMultiplier /= 10;
+      }
+
+      // Vérifier si le code complet a été saisi
+      if (currentMultiplier == 0) {
+        if (enteredCode == correctCode) {
+          playNote(261, 1000); // DO4 pour code correct
+        } else {
+          playNote(147, 1000); // RÉ3 pour code incorrect
+        }
+        // Réinitialiser pour une nouvelle tentative
+        enteredCode = 0;
+        currentMultiplier = 1000;
+      }
+    }
+  }
+}
+
+int detectDigit(int x, int y) {
+  // Implémenter une logique pour détecter les chiffres en fonction des coordonnées tactiles
+  // Exemple simplifié : retourner une valeur factice
+  return 1; // Remplacez par la détection réelle
+}
