@@ -1,4 +1,3 @@
-
 #include <Adafruit_GFX.h>
 #include <SPI.h>
 #include <Wire.h>
@@ -22,7 +21,7 @@ Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC);
 //variables du projet
 boolean appui = true;
 const int buzzerPin = 8; // Correspond à D4 sur la base shield
-const int correctCode = 1234; // Code du digicode
+const int correctCode = 1111; // Code du digicode
 
 int enteredCode = 0; // Code saisi
 int currentMultiplier = 1000; // Multiplicateur initial (4 chiffres)
@@ -92,6 +91,7 @@ void highlightButton(int row, int col, uint16_t color) {
 }
 
 void loop() {
+
   // Détection du tactile
   if (ts.touched()) {
     TS_Point p = ts.getPoint();
@@ -106,14 +106,18 @@ void loop() {
 
     if (row >= 0 && row < 4 && col >= 0 && col < 3) {
       // Vérifier si la touche actuelle est différente de la dernière
-      if (row != lastRow || col != lastCol) {
+      if (!isTouching || row != lastRow || col != lastCol) {
+        // Calculer le numéro correspondant
         int number = row * 3 + col + 1;
         if (number == 11) number = 0; // Bouton "0"
         if (number >= 0 && number <= 9) {
+          // Mettre à jour l'interface pour montrer l'appui
           highlightButton(row, col, ILI9341_BLUE); // Coloriser en bleu à l'appui
           playNote(220, 200); // LA3 pour chaque appui
           delay(200);
           highlightButton(row, col, ILI9341_YELLOW); // Revenir à la couleur d'origine
+
+          // Mettre à jour le code saisi
           enteredCode += number * currentMultiplier;
           currentMultiplier /= 10;
         }
@@ -133,16 +137,14 @@ void loop() {
         // Mettre à jour les dernières coordonnées de touche
         lastRow = row;
         lastCol = col;
+        isTouching = true;
       }
-    } else {
-      // Si les coordonnées ne sont pas valides, réinitialiser
-      lastRow = -1;
-      lastCol = -1;
     }
-    isTouching = true;
   } else {
+    // Si aucune touche n'est pressée
     isTouching = false;
     lastRow = -1; // Réinitialiser la dernière ligne touchée
     lastCol = -1; // Réinitialiser la dernière colonne touchée
   }
 }
+
