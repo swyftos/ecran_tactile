@@ -91,13 +91,3 @@ void detectAndChangeKeyColor() {
     }
   }
 }
-//Explications des parties clés du code :
-Conversion des coordonnées tactiles : Les coordonnées tactiles brutes sont divisées par 10 (int x = p.x / 10; int y = p.y / 10;) pour réduire leur échelle et simplifier le calcul des zones.
-
-Détection de la zone touchée : Le code identifie la touche en calculant sa position (colonne et ligne) en fonction des dimensions des boutons (buttonWidth et buttonHeight).
-
-Changement de couleur du bouton :
-
-Lorsqu'une zone est touchée, le bouton correspondant devient bleu.
-Après un délai de 200 ms (delay(200)), la couleur du bouton redevient jaune.
-Limites de chaque bouton : Les limites (xmin, xmax, ymin, ymax) sont calculées dynamiquement pour chaque touche en fonction de sa colonne et de sa ligne.
